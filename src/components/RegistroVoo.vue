@@ -1,23 +1,42 @@
 <template>
+<section class="section">
     <div class="container">
+      <div>
+        <h1 class="title is-size-1-touch">
+          Registrar Voo
+        </h1>
+      </div>
       <div class="columns is-vcentered">
-        <div class="column is-7">
-          <h1 class="title is-size-1-touch">
-              Registrar Voo
-            </h1>
-              <section>
+          <div class="column is-2">
                 <b-field label="Avião" >
                   <b-select placeholder="Selecione um avião" v-model="aviao">
                     <option value="Boing">Boing</option>
                     <option value="Air Bus">Air Bus</option>
                   </b-select> 
                 </b-field>
-                <b-field label="Data do voo" >
+                
+          </div>
+          <div class="column is-2">
+          <b-field label="Destino">
+                <b-select placeholder="Selecione um destino" v-model="destino">
+                    <option
+                        v-for="option in destinos"
+                        :value="option.nome"
+                        :key="option.nome">
+                        {{ option.nome }}
+                    </option>
+                </b-select>
+            </b-field>
+          </div>
+          <div class="column is-2">
+            <b-field label="Data do voo" >
                   <b-datepicker v-model="data"
                     placeholder="Selecione uma data"
                     icon="calendar-today">
                   </b-datepicker>
                 </b-field>
+          </div>
+          <div class="column is-2">
                 <b-field label="Hora do Voo">
                     <b-clockpicker
                         rounded
@@ -27,22 +46,25 @@
                         hour-format="24">
                     </b-clockpicker>
                 </b-field>
-                <b-field label="Numeros de Acentos">
-                  <b-numberinput v-model="numero"></b-numberinput>
-                </b-field>
-                <b-button type="is-success" icon-right="check" @click="registrarVoo()">Registrar Voo</b-button>
-              </section>
           </div>
-          <div class="column is-hidden-mobile">
-                <div class="is-block has-text-centered">
-                <img src="../assets/logo.png" class="hero__img is-inline-block" height="50%" width="50%">
-                </div>
+          <div class="column is-2">
+            <b-field label="Numeros de Acentos">
+              <b-numberinput v-model="numero"></b-numberinput>
+            </b-field>
+          </div>
+          <div class="column is-2">
           </div>
       </div>
+      <div>
+        <b-button type="is-success" icon-right="check" @click="registrarVoo()">Registrar Voo</b-button>
+      </div>
     </div>
+</section>
 </template>
 
 <script>
+import { voosRef } from '../config/db.js';
+
 export default {
   name: 'RegistroVoo',
   data() {
@@ -51,14 +73,28 @@ export default {
       data: new Date,
       aviao: '',
       numero: 100,
-      hora: new Date
+      hora: new Date,
+      destino: '',
+      destinos: [ 
+        {'nome': 'Belo Horizonte'},
+        {'nome': 'Divinópolis'},
+        {'nome': 'Guarulhos'},
+        {'nome': 'Brasília'},
+        {'nome': 'Rio de Janeiro'}
+      ]
     }
   },
   methods: {
     registrarVoo () {
-      alert(this.data + this.aviao + this.numero + this.hora)
+      voosRef.push({
+        data: this.data.toLocaleDateString(),
+        aviao: this.aviao,
+        numero: this.numero,
+        hora: this.hora.toLocaleTimeString(),
+        destino: this.destino
+      })
+      }
     }
-  }
 }
 </script>
 
